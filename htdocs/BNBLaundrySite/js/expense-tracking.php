@@ -72,7 +72,7 @@ $expenses = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
         .dashboard-btn { margin-bottom: 20px; }
 
         /* Modal Styling */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 25px; border-radius: 12px; width: 35%; box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); text-align: center; animation: fadeIn 0.3s; }
         .modal-header { font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #007bb5; text-align: left; }
         .close-btn { color: #e74c3c; float: right; font-size: 22px; cursor: pointer; font-weight: bold; }
@@ -80,40 +80,95 @@ $expenses = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
         .modal form input, .modal form select, .modal form textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; }
         .modal form button { width: 100%; padding: 12px; background: #007bb5; color: white; border-radius: 8px; border: none; cursor: pointer; font-size: 16px; }
         .modal form button:hover { background: #005f8d; }
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: #00a8e8;
-            color: white;
-            padding-top: 20px;
-            position: fixed;
-            left: 0;
-            top: 0;
-        }
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar ul li {
-            padding: 15px;
-            text-align: center;
-        }
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-        .sidebar ul li a:hover {
-            background: #007bb5;
-            border-radius: 5px;
-        }
+/* Default Sidebar */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #00a8e8;
+    color: white;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: width 0.3s ease-in-out;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* Prevents text from breaking into multiple lines */
+}
+
+/* Ensure menu items remain visible */
+.sidebar ul {
+    padding: 0;
+    list-style: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Sidebar buttons (links) */
+.sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-size: 18px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: #007bb5;
+    border-radius: 5px;
+}
+
+/* Closed Sidebar */
+.sidebar.closed {
+    width: 0;
+    padding: 0;
+}
+
+/* Hide sidebar content when collapsed */
+.sidebar.closed ul {
+    opacity: 0;
+    pointer-events: none; /* Prevent interactions */
+}
+
+/* Main content adjusts */
+.main-content {
+    margin-left: 260px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* When sidebar is closed, push content */
+.main-content.full {
+    margin-left: 0;
+}
+
+/* Toggle Button */
+.toggle-sidebar {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #00a8e8;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.toggle-sidebar:hover {
+    background: #007bb5;
+}
         /* Table */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
@@ -132,6 +187,7 @@ $expenses = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
     </style>
 </head>
 <body>
+<button class="toggle-sidebar" onclick="toggleSidebar()">☰ Menu</button>
 <!-- Sidebar -->
 <div class="sidebar">
     <h2>BnB Laundry</h2>
@@ -145,6 +201,7 @@ $expenses = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
         <li><a href="create-announcement.php">Create Announcements</a></li>
     </ul>
 </div>
+<div class="main-content">
 <div class="container">
     <h2>Expense Tracking</h2>
 
@@ -204,7 +261,7 @@ $expenses = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
         <?php endforeach; ?>
     </table>
 </div>
-
+</div>
 <footer>&copy; 2025 BnB Laundry. All Rights Reserved.</footer>
 
 <script>
@@ -215,6 +272,15 @@ $expenses = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
         }
     }
 </script>
+<script>
+function toggleSidebar() {
+    let sidebar = document.querySelector('.sidebar');
+    let content = document.querySelector('.main-content');
 
+    // Toggle 'closed' class for all screen sizes
+    sidebar.classList.toggle('closed');
+    content.classList.toggle('full');
+}
+</script
 </body>
 </html>

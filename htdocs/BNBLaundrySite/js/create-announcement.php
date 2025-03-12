@@ -81,6 +81,7 @@ $announcements = $conn->query("
     <meta charset="UTF-8">
     <title>Manage Announcements | BnB Laundry</title>
     <style>
+        
         body { font-family: Arial, sans-serif; background-color: #f4fbff; text-align: center; }
         .container { max-width: 600px; margin: 50px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); }
         input, textarea { width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
@@ -93,22 +94,95 @@ $announcements = $conn->query("
         .delete-btn { background: #e74c3c; color: white; }
         .edit-btn:hover { background: #c79100; }
         .delete-btn:hover { background: #c0392b; }
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: #00a8e8;
-            color: white;
-            padding-top: 20px;
-            position: fixed;
-            left: 0;
-            top: 0;
-        }
-        .sidebar h2 { text-align: center; margin-bottom: 30px; }
-        .sidebar ul { list-style: none; padding: 0; }
-        .sidebar ul li { padding: 15px; text-align: center; }
-        .sidebar ul li a { color: white; text-decoration: none; display: block; font-size: 18px; transition: 0.3s; }
-        .sidebar ul li a:hover { background: #007bb5; border-radius: 5px; }
+        /* Default Sidebar */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #00a8e8;
+    color: white;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: width 0.3s ease-in-out;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* Prevents text from breaking into multiple lines */
+}
+
+/* Ensure menu items remain visible */
+.sidebar ul {
+    padding: 0;
+    list-style: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Sidebar buttons (links) */
+.sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-size: 18px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: #007bb5;
+    border-radius: 5px;
+}
+
+/* Closed Sidebar */
+.sidebar.closed {
+    width: 0;
+    padding: 0;
+}
+
+/* Hide sidebar content when collapsed */
+.sidebar.closed ul {
+    opacity: 0;
+    pointer-events: none; /* Prevent interactions */
+}
+
+/* Main content adjusts */
+.main-content {
+    margin-left: 260px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* When sidebar is closed, push content */
+.main-content.full {
+    margin-left: 0;
+}
+
+/* Toggle Button */
+.toggle-sidebar {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #00a8e8;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.toggle-sidebar:hover {
+    background: #007bb5;
+}
         /* Modal (Popup) Styling */
         .modal {
             display: none; 
@@ -131,6 +205,7 @@ $announcements = $conn->query("
         .close-btn:hover { color: darkred; }
     </style>
 </head>
+<button class="toggle-sidebar" onclick="toggleSidebar()">☰ Menu</button>
 <!-- Sidebar -->
 <div class="sidebar">
     <h2>BnB Laundry</h2>
@@ -145,7 +220,7 @@ $announcements = $conn->query("
     </ul>
 </div>
 <body>
-
+<div class="main-content">
 <div class="container">
     <h2>Create Announcement</h2>
     <?php if ($message): ?>
@@ -179,7 +254,7 @@ $announcements = $conn->query("
         </div>
     <?php endforeach; ?>
 </div>
-
+</div>
 <!-- Edit Modal -->
 <div id="editModal" class="modal">
     <div class="modal-content">
@@ -207,6 +282,15 @@ function closeEditModal() {
     document.getElementById('editModal').style.display = "none";
 }
 </script>
+<script>
+function toggleSidebar() {
+    let sidebar = document.querySelector('.sidebar');
+    let content = document.querySelector('.main-content');
 
+    // Toggle 'closed' class for all screen sizes
+    sidebar.classList.toggle('closed');
+    content.classList.toggle('full');
+}
+</script>
 </body>
 </html>

@@ -122,7 +122,7 @@
         .highlight-container {
             position: relative;
             display: inline-block;
-            clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 70%);
+            clip-path: polygon(0 0, 100% 0%, 100% 100%, 0 70%);
             width: 100%;
             height: 400px;
             background-size: contain;

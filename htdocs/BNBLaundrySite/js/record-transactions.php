@@ -119,40 +119,95 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create_order"])) {
         .btn:hover { background: #007bb5; }
         .message { color: red; font-weight: bold; margin-bottom: 10px; }
         .service-box { background: #e3f2fd; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
-                /* Sidebar */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: #00a8e8;
-            color: white;
-            padding-top: 20px;
-            position: fixed;
-            left: 0;
-            top: 0;
-        }
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar ul li {
-            padding: 15px;
-            text-align: center;
-        }
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-        .sidebar ul li a:hover {
-            background: #007bb5;
-            border-radius: 5px;
-        }
+/* Default Sidebar */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #00a8e8;
+    color: white;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: width 0.3s ease-in-out;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* Prevents text from breaking into multiple lines */
+}
+
+/* Ensure menu items remain visible */
+.sidebar ul {
+    padding: 0;
+    list-style: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Sidebar buttons (links) */
+.sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-size: 18px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: #007bb5;
+    border-radius: 5px;
+}
+
+/* Closed Sidebar */
+.sidebar.closed {
+    width: 0;
+    padding: 0;
+}
+
+/* Hide sidebar content when collapsed */
+.sidebar.closed ul {
+    opacity: 0;
+    pointer-events: none; /* Prevent interactions */
+}
+
+/* Main content adjusts */
+.main-content {
+    margin-left: 260px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* When sidebar is closed, push content */
+.main-content.full {
+    margin-left: 0;
+}
+
+/* Toggle Button */
+.toggle-sidebar {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #00a8e8;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.toggle-sidebar:hover {
+    background: #007bb5;
+}
     </style>
     <script>
         function calculateTotal() {
@@ -201,6 +256,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create_order"])) {
     </script>
 </head>
 <body>
+<button class="toggle-sidebar" onclick="toggleSidebar()">☰ Menu</button>
 <!-- Sidebar -->
 <div class="sidebar">
     <h2>BnB Laundry</h2>
@@ -214,6 +270,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create_order"])) {
         <li><a href="create-announcement.php">Create Announcements</a></li>
     </ul>
 </div>
+<div class="main-content">
 <div class="container">
     <h2>Record New Order</h2>
 
@@ -245,6 +302,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["create_order"])) {
         <button type="submit" name="create_order" class="btn">Submit Order</button>
     </form>
 </div>
+</div>
+<script>
+function toggleSidebar() {
+    let sidebar = document.querySelector('.sidebar');
+    let content = document.querySelector('.main-content');
 
+    // Toggle 'closed' class for all screen sizes
+    sidebar.classList.toggle('closed');
+    content.classList.toggle('full');
+}
+</script>
 </body>
 </html>

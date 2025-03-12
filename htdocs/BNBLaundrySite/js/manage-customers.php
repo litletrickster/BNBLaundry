@@ -45,40 +45,115 @@ $customers = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
         .top-bar button:hover { background: #007bb5; }
         .search-box { padding: 8px; border: 1px solid #ccc; border-radius: 5px; width: 200px; }
         
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: #00a8e8;
-            color: white;
-            padding-top: 20px;
-            position: fixed;
-            left: 0;
-            top: 0;
+        /* Default Sidebar */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: #00a8e8;
+    color: white;
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: width 0.3s ease-in-out;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* Prevents text from breaking into multiple lines */
+}
+
+/* Ensure menu items remain visible */
+.sidebar ul {
+    padding: 0;
+    list-style: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Sidebar buttons (links) */
+.sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    font-size: 18px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: #007bb5;
+    border-radius: 5px;
+}
+
+/* Closed Sidebar */
+.sidebar.closed {
+    width: 0;
+    padding: 0;
+}
+
+/* Hide sidebar content when collapsed */
+.sidebar.closed ul {
+    opacity: 0;
+    pointer-events: none; /* Prevent interactions */
+}
+
+/* Main content adjusts */
+.main-content {
+    margin-left: 260px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* When sidebar is closed, push content */
+.main-content.full {
+    margin-left: 0;
+}
+
+/* Toggle Button */
+.toggle-sidebar {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #00a8e8;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.toggle-sidebar:hover {
+    background: #007bb5;
+}
+        /* Modal (Popup) Styling */
+        .modal {
+            display: none; 
+            position: fixed; 
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); 
+            justify-content: center; 
+            align-items: center;
         }
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 30px;
+        .modal-content {
+            background: white; padding: 20px; border-radius: 10px; width: 40%;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2); text-align: center;
         }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
+        .modal-header {
+            font-size: 20px; font-weight: bold; margin-bottom: 15px; text-align: left;
         }
-        .sidebar ul li {
-            padding: 15px;
-            text-align: center;
+        .close-btn {
+            color: #e74c3c; float: right; font-size: 22px; cursor: pointer;
         }
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-        .sidebar ul li a:hover {
-            background: #007bb5;
-            border-radius: 5px;
-        }
+        .close-btn:hover { color: darkred; }
         /* Table */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
@@ -94,15 +169,7 @@ $customers = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h2>Manage Customers</h2>
-
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <button onclick="window.location.href='add-customer.php'">Add Customer</button>
-        <input type="text" class="search-box" placeholder="Search Customers...">
-    </div>
+<button class="toggle-sidebar" onclick="toggleSidebar()">☰ Menu</button>
 <!-- Sidebar -->
 <div class="sidebar">
     <h2>BnB Laundry</h2>
@@ -116,6 +183,17 @@ $customers = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
         <li><a href="create-announcement.php">Create Announcements</a></li>
     </ul>
 </div>
+<div class="main-content">
+<div class="container">
+    <h2>Manage Customers</h2>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <button onclick="window.location.href='add-customer.php'">Add Customer</button>
+        <input type="text" class="search-box" placeholder="Search Customers...">
+    </div>
+
+
     <!-- Customers Table -->
     <table>
         <tr>
@@ -148,11 +226,21 @@ $customers = $conn->query($query)->fetch_all(MYSQLI_ASSOC);
             </tr>
         <?php } ?>
     </table>
+    </div>
 </div>
 
 <footer>
     &copy; 2025 BnB Laundry. All Rights Reserved.
 </footer>
+<script>
+function toggleSidebar() {
+    let sidebar = document.querySelector('.sidebar');
+    let content = document.querySelector('.main-content');
 
+    // Toggle 'closed' class for all screen sizes
+    sidebar.classList.toggle('closed');
+    content.classList.toggle('full');
+}
+</script>
 </body>
 </html>
