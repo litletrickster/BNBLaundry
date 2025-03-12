@@ -1,5 +1,6 @@
 BnB Laundry Management System 🧺
 A web-based laundry management system for efficient order tracking, customer management, and financial reporting.
+
 📌 Features
 User Management: Staff can log in and manage customers, orders, and services.
 Order Tracking: Customers can track their orders via order ID.
